@@ -12,14 +12,14 @@ function App (): JSX.Element {
         <>
             <BrowserRouter>
                 <SnackBarProvider>
-                    <AuthProvider>
+                    {/* <AuthProvider> */}
                         {/* <Header /> */}
                             <Switch>
                                 <Box style={{ overflow: 'hidden' }}>
                                     <Route exact path="/" component={Test} />
                                 </Box>
                             </Switch>
-                    </AuthProvider>
+                    {/* </AuthProvider> */}
                 </SnackBarProvider>
             </BrowserRouter>
         </>
