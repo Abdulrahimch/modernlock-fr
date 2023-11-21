@@ -4,6 +4,8 @@ import { Box } from '@material-ui/core';
 import { SnackBarProvider } from './context/useSnackbarContext';
 import { AuthProvider } from './context/useAuthContext';
 import Test from './pages/Test';
+import Header from './components/Header/Header';
+import Home from './pages/Home/Home';
 
 // import Header from './components/Header/Header';
 
@@ -13,10 +15,10 @@ function App (): JSX.Element {
             <BrowserRouter>
                 <SnackBarProvider>
                     {/* <AuthProvider> */}
-                        {/* <Header /> */}
+                        <Header />
                             <Switch>
                                 <Box style={{ overflow: 'hidden' }}>
-                                    <Route exact path="/" component={Test} />
+                                    <Route exact path="/" component={Home} />
                                 </Box>
                             </Switch>
                     {/* </AuthProvider> */}
