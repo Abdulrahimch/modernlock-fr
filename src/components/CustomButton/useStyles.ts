@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.common.white,
     },
     button: {
-        textTransform: 'uppercase',
+        textTransform: 'capitalize',
         borderRadius: theme.shape.borderRadius,
         fontSize: 12,
         fontWeight: 600,
@@ -56,6 +56,16 @@ const useStyles = makeStyles((theme) => ({
             flex: 1,
             width: 120,
             height: 56,
+        },
+        "&.btnTabStyle": {
+            border: "1px solid #000000",
+            borderRadius: "15px",
+            fontSize: 16,
+            fontWeight: 400,
+            backgroundColor: "#FFFFFF",
+            margin: "0.5em",
+            padding: theme.spacing(1)
+            // margin: "1em"
         }
 
     },

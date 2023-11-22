@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(5),
+    
     },
     title: {
         textTransform: 'uppercase',
@@ -12,6 +13,11 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '2em',
         textAlign: 'center',
         paddingTop: theme.spacing(3),
+    },
+    pageTitle: {
+        fontWeight: 800,
+        fontSize: 24,
+        textTransform: 'capitalize',
     }
 }));
 
