@@ -11,6 +11,15 @@ const useStyles = makeStyles((theme) => ({
         "&.subHeader": {
             backgroundColor: "#FFFFFF",
             border: "1px solid #000000"
+        },
+        "&.btnTabStyle": {
+            border: "1px solid #000000",
+            borderRadius: "15px",
+            textTransform: 'uppercase',
+            fontWeight: 800,
+            fontSize: 24,
+            backgroundColor: "#FFFFFF",
+            margin: "1em"
         }
     }
     
