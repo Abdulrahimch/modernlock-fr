@@ -61,7 +61,7 @@ const Home = () => {
             <Box style={{ marginBottom: "2em" }}>
                 <SubHeader style="subHeader" buttons={buttons} />
             </Box>
-            <Grid container direction="column" alignItems="center" justifyContent="center" component={Paper} spacing={8} className={root}>
+            <Grid container direction="column" alignItems="center" component={Paper} spacing={8} className={root}>
                 <Grid item>
                     <Typography className={pageTitle}>Welcome back, Abdulrahim</Typography>
                 </Grid>
@@ -82,7 +82,7 @@ const Home = () => {
                                     pagination={{
                                     clickable: true,
                                     }}
-                                    modules={[Pagination]}
+                                    // modules={[Pagination]}
                                     className={"mySwiper"}
                                 >
                                     {cards ? cards.map(({status, name, from, to, roomNo}) => (
@@ -117,7 +117,7 @@ const Home = () => {
                             </Grid>
                         </Grid>
                         <Grid item>
-                            <Typography>ASK US</Typography>
+                            <Typography>Footer goes here</Typography>
                         </Grid>
                     </Grid>
                 </Grid>
