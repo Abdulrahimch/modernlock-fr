@@ -2,24 +2,38 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        padding: theme.spacing(5),
-        height: "100vh",
-        // backgroundColor: "red"
-    
+        width: '100%',
+        backgroundColor: theme.palette.background.paper,
+    },
+    inline: {
+        display: 'inline',
     },
     title: {
-        textTransform: 'uppercase',
+        textTransform: 'capitalize',
         fontWeight: 800,
         fontSize: 24,
         color: 'primary',
-        marginBottom: '2em',
         textAlign: 'center',
         paddingTop: theme.spacing(3),
     },
-    pageTitle: {
-        fontWeight: 800,
-        fontSize: 24,
-        textTransform: 'capitalize',
+    select: {
+        borderRadius: 4,
+        position: 'relative',
+        backgroundColor: theme.palette.common.white,
+        border: '1px solid #ced4da',
+        fontSize: 16,
+        padding: theme.spacing(2),
+        marginTop: '0.5em',
+        width: '100%',
+        minWidth: 500,
+        transition: theme.transitions.create(['border-color', 'box-shadow']),
+      },
+    listItem: {
+        marginBottom: "1em", 
+        padding: "2em"
+    },
+    list: {
+        // padding: theme.spacing(8),
     }
 }));
 

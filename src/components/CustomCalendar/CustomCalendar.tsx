@@ -30,6 +30,7 @@ const CustomCalendar = (events: Props) => (
       startAccessor="start"
       endAccessor="end"
       style={{ height: 500 }}
+      views={["month"]}
     />
   </Box>
 )
