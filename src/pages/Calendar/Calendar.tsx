@@ -33,7 +33,7 @@ const Calendar = () => {
     return (
         <>
         <Paper style={{ height: "100vh" }}>
-            <Grid container direction="column" alignContent="center" justifyContent="center" spacing={6}>
+            <Grid container direction="column" alignContent="center" justifyContent="center" spacing={6} style={{ height: "70vh" }}>
                 <Grid item className={classes.title}>
                     calendar
                 </Grid>

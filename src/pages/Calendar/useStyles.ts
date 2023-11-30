@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 24,
         color: 'primary',
         textAlign: 'center',
-        paddingTop: theme.spacing(3),
     },
     select: {
         borderRadius: 4,
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2),
         marginTop: '0.5em',
         width: '100%',
-        minWidth: 500,
+        minWidth: 400,
         transition: theme.transitions.create(['border-color', 'box-shadow']),
       },
     listItem: {
