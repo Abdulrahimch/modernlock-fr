@@ -6,6 +6,7 @@ import { AuthProvider } from './context/useAuthContext';
 import Test from './pages/Test';
 import Header from './components/Header/Header';
 import Home from './pages/Home/Home';
+import Calendar from './pages/Calendar/Calendar';
 
 // import Header from './components/Header/Header';
 
@@ -19,6 +20,7 @@ function App (): JSX.Element {
                             <Switch>
                                 <Box style={{ overflow: 'hidden' }}>
                                     <Route exact path="/" component={Home} />
+                                    <Route exact path="/calender" component={Calendar} />
                                 </Box>
                             </Switch>
                     {/* </AuthProvider> */}
