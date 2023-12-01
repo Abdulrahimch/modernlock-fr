@@ -1,8 +1,8 @@
 
-type role = 'owner' | 'agent';
+type role = 'owner' | 'client';
 
 export interface User {
   email: string;
-  role: role;
+  accountType: role;
   fullName: string
 };

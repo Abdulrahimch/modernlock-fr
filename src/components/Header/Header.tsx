@@ -26,13 +26,13 @@ const Header = (): JSX.Element => {
                         {loggedInUser ? 
                         <Button  
                             className={btnStyle}
-                            onClick={handleLoginButtonClick}
+                            onClick={handleLogout}
                         >
                             Logout
                         </Button>
                         : <Button 
                             className={btnStyle}
-                            onClick={handleLogout}
+                            onClick={handleLoginButtonClick}
                         >
                             Login
                         </Button>

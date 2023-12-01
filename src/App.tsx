@@ -7,6 +7,7 @@ import Test from './pages/Test';
 import Header from './components/Header/Header';
 import Home from './pages/Home/Home';
 import Calendar from './pages/Calendar/Calendar';
+import Login from './pages/Login/Login';
 
 // import Header from './components/Header/Header';
 
@@ -15,15 +16,16 @@ function App (): JSX.Element {
         <>
             <BrowserRouter>
                 <SnackBarProvider>
-                    {/* <AuthProvider> */}
+                    <AuthProvider>
                         <Header />
                             <Switch>
                                 <Box style={{ overflow: 'hidden' }}>
                                     <Route exact path="/" component={Home} />
                                     <Route exact path="/calender" component={Calendar} />
+                                    <Route exact path="/login" component={Login} />
                                 </Box>
                             </Switch>
-                    {/* </AuthProvider> */}
+                    </AuthProvider>
                 </SnackBarProvider>
             </BrowserRouter>
         </>
