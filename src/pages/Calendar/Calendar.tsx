@@ -1,9 +1,12 @@
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Divider, makeStyles, Grid, Paper, Card, CardContent, CardActions, Button, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomCalendar from "../../components/CustomCalendar/CustomCalendar";
 import useStyles from "./useStyles";
 import InputBase from '@material-ui/core/InputBase';
 import {  withStyles } from '@material-ui/core/styles';
+import { getProperties } from "../../helpers/APICalls/properties";
+import { useSnackBar } from "../../context/useSnackbarContext";
+import { useHistory } from "react-router-dom";
 
   const properties = [
     {
@@ -26,9 +29,25 @@ import {  withStyles } from '@material-ui/core/styles';
 
 const Calendar = () => {
     const classes = useStyles();
+    const { updateSnackBarMessage } = useSnackBar();
+    const history = useHistory();
+    const [properties, setProperties] = useState<any[] | undefined>()
+
     const handleChange = () => {
         console.log("handlechange")
     }
+
+    useEffect(() => {
+        getProperties().then((data) => {
+            if (data.error) {
+                updateSnackBarMessage(data.error.message);
+            } else if (data.success){
+                setProperties(data.success?.properties)
+            } else {
+                updateSnackBarMessage('An unexpected error occurred. Please try again !');
+            }
+        });
+    }, [history])
 
     return (
         <>
@@ -60,9 +79,12 @@ const Calendar = () => {
                                 onChange={handleChange}
                                 classes={{ select: classes.select }}
                             >
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            
+                            {properties && properties.map((property, idx) => (
+                                <>
+                                    <MenuItem key={idx} value={property._id}>{property.name}</MenuItem>
+                                </>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
