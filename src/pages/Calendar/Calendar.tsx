@@ -56,10 +56,11 @@ const Calendar = () => {
                 <Grid item className={classes.title}>
                     calendar
                 </Grid>
-                <Grid item container justifyContent="space-around">
-                    <FormControl style={{ margin: "1em" }}>
-                        <InputLabel>Select a property</InputLabel>
-                        <Select
+                <Grid item container justifyContent="space-around" alignItems="center">
+                    <Grid item>
+                        <FormControl style={{ margin: "1em" }}>
+                            <InputLabel>Select a property</InputLabel>
+                            <Select
                                 id="type"
                                 name="type"
                                 autoWidth
@@ -75,18 +76,22 @@ const Calendar = () => {
                                     },
                                     getContentAnchorEl: null
                                 }}
-                                value={10}
+                                value={properties && properties[0]}
                                 onChange={handleChange}
                                 classes={{ select: classes.select }}
                             >
-                            
-                            {properties && properties.map((property, idx) => (
-                                <>
-                                    <MenuItem key={idx} value={property._id}>{property.name}</MenuItem>
-                                </>
-                            ))}
-                        </Select>
-                    </FormControl>
+                                
+                                {properties && properties.map((property, idx) => (
+                                    <>
+                                        <MenuItem key={idx} value={property._id} style={{ minWidth: 425 }}>{property.name}</MenuItem>
+                                    </>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item>
+                        Add reservation
+                    </Grid>
                 </Grid>
                 <Grid item style={{ width: "100%" }}>
                     <CustomCalendar events={[]} />
