@@ -22,10 +22,15 @@ const AddReservation = () => {
     const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
     const history = useHistory();
     const { updateSnackBarMessage } = useSnackBar()
+    const propertyId = ""
 
     const handleSubmit = (inputs: any) => {
         setIsBtnLoading(false);
-        postReservation(inputs).then((data) => {
+        if (!propertyId) {
+            updateSnackBarMessage("Please select a property")
+            return;
+        }
+        postReservation(propertyId, inputs).then((data) => {
             if (data.error) {
                 updateSnackBarMessage(data.error.message);
                 setIsBtnLoading(true);
