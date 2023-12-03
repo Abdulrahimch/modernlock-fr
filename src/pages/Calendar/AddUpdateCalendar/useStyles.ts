@@ -138,7 +138,7 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: 800,
       textAlign: 'center',
       textTransform: 'uppercase',
-      paddingTop: theme.spacing(3)
+      paddingTop: theme.spacing(5)
     },
     iconStyle: {
       padding: theme.spacing(1)
@@ -161,7 +161,18 @@ const useStyles = makeStyles((theme) => ({
   },
   progressStyle: {
     color: 'black'
-  }
+  },
+  dateSytle: {
+    borderRadius: 4,
+    position: 'relative',
+    backgroundColor: theme.palette.common.white,
+    border: '1px solid #ced4da',
+    borderColor: 'blue',
+    fontSize: 16,
+    margin: 5,
+    height: 25,
+    padding: theme.spacing(2),
+}
 }));
 
 export default useStyles;

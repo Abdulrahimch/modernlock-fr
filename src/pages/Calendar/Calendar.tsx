@@ -7,6 +7,8 @@ import {  withStyles } from '@material-ui/core/styles';
 import { getProperties } from "../../helpers/APICalls/properties";
 import { useSnackBar } from "../../context/useSnackbarContext";
 import { useHistory } from "react-router-dom";
+import CustomDialog from "../../components/CustomDialog/CustomDialog";
+import AddReservation from "./AddUpdateCalendar/AddReservation";
 
   const properties = [
     {
@@ -31,11 +33,14 @@ const Calendar = () => {
     const classes = useStyles();
     const { updateSnackBarMessage } = useSnackBar();
     const history = useHistory();
-    const [properties, setProperties] = useState<any[] | undefined>()
+    const [properties, setProperties] = useState<any[] | undefined>();
+    const [open, setOpen] = useState<boolean>(false);
 
     const handleChange = () => {
         console.log("handlechange")
     }
+
+    const onClose = () => { setOpen(false) };
 
     useEffect(() => {
         getProperties().then((data) => {
@@ -90,12 +95,15 @@ const Calendar = () => {
                         </FormControl>
                     </Grid>
                     <Grid item>
-                        Add reservation
+                        <Button onClick={() => setOpen(true)}>Add reservation</Button>
                     </Grid>
                 </Grid>
                 <Grid item style={{ width: "100%" }}>
                     <CustomCalendar events={[]} />
                 </Grid>
+                <CustomDialog open={open} onClose={onClose}>
+                    <AddReservation/>
+                </CustomDialog>
             </Grid>
         </Paper>
             
