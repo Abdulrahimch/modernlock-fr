@@ -18,21 +18,34 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
+interface EventInt {
+  id: number;
+  title: string;
+  start: Date;
+  end: Date;
+  editable: boolean;
+}
+
 interface Props {
-  events: any[]
+  events: EventInt[]
 };
 
-const CustomCalendar = (events: Props) => (
-  <Box>
-    <Calendar
-      localizer={localizer}
-      events={[]}
-      startAccessor="start"
-      endAccessor="end"
-      style={{ height: 500 }}
-      views={["month"]}
-    />
-  </Box>
-)
+const CustomCalendar = ({ events }: Props) => {
+  console.log("events is from calnedar components: ", events)
+  return (
+      <>
+        <Box>
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: 500 }}
+            views={["month"]}
+          />
+        </Box>
+      </>
+  )
+}
 
 export default CustomCalendar;
