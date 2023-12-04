@@ -9,6 +9,9 @@ import { useSnackBar } from "../../context/useSnackbarContext";
 import { useHistory } from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog/CustomDialog";
 import AddReservation from "./AddUpdateCalendar/AddReservation";
+import { Property } from "../../interface/Property";
+import { getReservations } from "../../helpers/APICalls/reservation";
+import { Reservation } from "../../interface/Reservation";
 
   const properties = [
     {
@@ -33,12 +36,22 @@ const Calendar = () => {
     const classes = useStyles();
     const { updateSnackBarMessage } = useSnackBar();
     const history = useHistory();
-    const [properties, setProperties] = useState<any[] | undefined>();
+    const [properties, setProperties] = useState<Property[] | undefined>();
+    const [selectedPropertyId, setSelectedPropertyId] = useState<string>("")
     const [open, setOpen] = useState<boolean>(false);
+    const [calendarEvents, setCalendarEvents] = useState<any []>([]);
 
-    const handleChange = () => {
-        console.log("handlechange")
-    }
+    const handleChange = (event: any) => {
+        setSelectedPropertyId(event.target.value);
+    };
+
+    const onAddReservationClick = () => {
+        if (!selectedPropertyId) {
+            updateSnackBarMessage("please select a property");
+            return 
+        }
+        setOpen(true)
+    };
 
     const onClose = () => { setOpen(false) };
 
@@ -47,12 +60,47 @@ const Calendar = () => {
             if (data.error) {
                 updateSnackBarMessage(data.error.message);
             } else if (data.success){
-                setProperties(data.success?.properties)
+                if (data.success?.properties && data.success?.properties.length > 0) {
+                    setProperties(data.success?.properties)
+                    setSelectedPropertyId(data.success.properties[0]._id)
+                }
+                else {
+                    setProperties([])
+                    setSelectedPropertyId("")
+                }
             } else {
                 updateSnackBarMessage('An unexpected error occurred. Please try again !');
             }
         });
     }, [history])
+
+    useEffect(() => {
+        getReservations(selectedPropertyId).then((data) => {
+            if (data.error) {
+                updateSnackBarMessage(data.error.message);
+            } else if (data.success) {
+                let events: any[] = []
+                data.success?.reservations && data.success?.reservations.map((res: Reservation, idx: number) => {
+                    let event = {
+                        id: idx+1,
+                        title: res.name,
+                        start: new Date(res.checkin),
+                        end: new Date(res.checkout),
+                        tooltip: 'Details about Meeting 1',
+                        editable: true,
+                      }
+                    events.push(event)
+                })
+                console.log("Reservations: ", events)
+                setCalendarEvents(events)
+            } else {
+                updateSnackBarMessage('An unexpected error occurred. Please try again !');
+            }
+            // return () => {
+            //     setCalendarEvents([])
+            // };
+        });
+    }, [selectedPropertyId])
 
     return (
         <>
@@ -81,28 +129,25 @@ const Calendar = () => {
                                     },
                                     getContentAnchorEl: null
                                 }}
-                                value={properties && properties[0]}
+                                value={selectedPropertyId}
                                 onChange={handleChange}
                                 classes={{ select: classes.select }}
                             >
-                                
                                 {properties && properties.map((property, idx) => (
-                                    <>
-                                        <MenuItem key={idx} value={property._id} style={{ minWidth: 425 }}>{property.name}</MenuItem>
-                                    </>
+                                    <MenuItem key={idx+1} value={property._id} style={{ minWidth: 425 }}>{property.name}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
                     </Grid>
                     <Grid item>
-                        <Button onClick={() => setOpen(true)}>Add reservation</Button>
+                        <Button style={{ backgroundColor: "blue", padding: "1em", color: "white"  }} onClick={onAddReservationClick}>Add reservation</Button>
                     </Grid>
                 </Grid>
                 <Grid item style={{ width: "100%" }}>
-                    <CustomCalendar events={[]} />
+                    <CustomCalendar events={calendarEvents} />
                 </Grid>
                 <CustomDialog open={open} onClose={onClose}>
-                    <AddReservation/>
+                    <AddReservation propertyId={selectedPropertyId}/>
                 </CustomDialog>
             </Grid>
         </Paper>
