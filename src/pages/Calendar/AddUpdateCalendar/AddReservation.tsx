@@ -17,12 +17,16 @@ const reservation: Reservation = {
     email: ""
 }
 
-const AddReservation = () => {
+interface Props {
+    propertyId: string
+}
+
+const AddReservation = ({ propertyId }: Props) => {
     const { root, mainTitle } = useStyles();
     const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
     const history = useHistory();
     const { updateSnackBarMessage } = useSnackBar()
-    const propertyId = ""
+    
 
     const handleSubmit = (inputs: any) => {
         setIsBtnLoading(false);
