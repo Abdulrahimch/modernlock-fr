@@ -7,58 +7,55 @@ import useStyles from './useStyles';
 import { Reservation } from '../../../interface/Reservation';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import CustomCircularProgress from '../../../components/CustomCircularProgress/CustomCircularProgress';
+import ReservationForm from './ReservationForm';
+import { updateReservation } from '../../../helpers/APICalls/reservation';
 
-const UpdateReservation = () => {
-    // const { root, mainTitle } = useStyles();
-    // const params = useParams();
-    // const { tourId } = Object(params);
-    // const [tour, setTour] = useState<Tour>();
-    // const [isLoading, setIsLoading] = useState<boolean>(true);
-    // const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
+interface Props {
+    reservation: any;
+    updateCalendarEvents: (event: any, option: "update" | "delete") => void
+}
 
-    // const { updateSnackBarMessage } = useSnackBar(); 
+const UpdateReservation = ({ reservation, updateCalendarEvents }: Props) => {
+    const { root, mainTitle } = useStyles();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
 
-    // const handleSubmit = (inputs: any) => {
-    //     setIsBtnLoading(true);
-    //     const id = tour?._id;
-    //     {id && updateTour(id, inputs).then((data) => {
-    //         if (data.error) {
-    //             updateSnackBarMessage(data.error.message);
-    //             setIsBtnLoading(false);
-    //         } else if (data.success) {
-    //             updateSnackBarMessage('Data has been updated successfully!');
-    //             setIsBtnLoading(false);
-    //         } else {
-    //             updateSnackBarMessage('An unexpected error occurred. Please try again !');
-    //             setIsBtnLoading(false);
-    //         }
-    //     });}
-    // }
+    const { updateSnackBarMessage } = useSnackBar(); 
 
-    // useEffect(() => {
-    //     fetchTourApi(tourId).then((data) => {
-    //         if (data.error) {
-    //             updateSnackBarMessage(data.error.message);
-    //             setIsLoading(false);
-    //         } else if (data.success){
-    //             setTour(data.success.tour);
-    //             setIsLoading(false);
-    //         } else {
-    //             updateSnackBarMessage('An unexpected error occurred. Please try again !');
-    //             setIsLoading(false);
-    //         }
-    //     });
-    // }, [updateSnackBarMessage]);
+    console.log("from update reservation component: ", reservation)
 
-    // return (
-    //     <>
-    //         {isLoading ? <CustomCircularProgress style='center' /> : <Box className={root}>
-    //             <Typography className={mainTitle}>
-    //                 Update Tour
-    //             </Typography>
-    //             {tour && <BusinessTourForm handleSubmit={handleSubmit} tour={tour} isBtnLoading={isBtnLoading}/>}            </Box>}
-    //     </>
-    // )
+    const handleSubmit = (inputs: any) => {
+        setIsBtnLoading(true);
+        updateReservation(reservation._id, inputs).then((data) => {
+            if (data.error) {
+                updateSnackBarMessage(data.error.message);
+                setIsBtnLoading(false);
+            } else if (data.success) {
+                updateSnackBarMessage('Data has been updated successfully!');
+                updateCalendarEvents(data.success?.reservation, "update");
+                setIsBtnLoading(false);
+            } else {
+                updateSnackBarMessage('An unexpected error occurred. Please try again !');
+                setIsBtnLoading(false);
+            }
+        });
+    }
+
+
+    return (
+        <>
+            <Box className={root}>
+                <Typography className={mainTitle}>
+                    Update Reservation
+                </Typography>
+                <ReservationForm 
+                    handleSubmit={handleSubmit} 
+                    reservation={reservation} 
+                    isBtnLoading={isBtnLoading} 
+                />
+            </Box>
+        </>
+    )
 };
 
 export default UpdateReservation;
