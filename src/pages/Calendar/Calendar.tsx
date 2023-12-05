@@ -10,8 +10,10 @@ import { useHistory } from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog/CustomDialog";
 import AddReservation from "./AddUpdateCalendar/AddReservation";
 import { Property } from "../../interface/Property";
-import { getReservations } from "../../helpers/APICalls/reservation";
+import { getReservations, removeReservation } from "../../helpers/APICalls/reservation";
 import { Reservation } from "../../interface/Reservation";
+import ChooseComponent from "../../components/ChooseComponent/ChooseComponent";
+import UpdateReservation from "./AddUpdateCalendar/UpdateReservation";
 
   const properties = [
     {
@@ -37,9 +39,15 @@ const Calendar = () => {
     const { updateSnackBarMessage } = useSnackBar();
     const history = useHistory();
     const [properties, setProperties] = useState<Property[] | undefined>();
-    const [selectedPropertyId, setSelectedPropertyId] = useState<string>("")
+    const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [open, setOpen] = useState<boolean>(false);
     const [calendarEvents, setCalendarEvents] = useState<any []>([]);
+    const [openUpdateDelete, setOpenUpdateDelete] = useState<boolean>(false);
+    const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
+
+    
+    
 
     const handleChange = (event: any) => {
         setSelectedPropertyId(event.target.value);
@@ -53,7 +61,37 @@ const Calendar = () => {
         setOpen(true)
     };
 
-    const onClose = () => { setOpen(false) };
+    const onSelectEvent = (EventInt: any) => {
+        setSelectedEvent(EventInt);
+        setOpenUpdateDelete(true);
+    }
+
+    const updateCalendarEvents = (event: any, option: "update" | "delete") => {
+        let newEvents = []
+        switch(option) {
+            case "update":
+                newEvents = calendarEvents.map((e: any) => {
+                    if (e._id === event._id) return { ...e, ...event }
+                    return e;
+                })
+                console.log("new events: ", newEvents)
+                setCalendarEvents(newEvents);
+                onClose();
+                break;
+
+            case "delete": 
+                newEvents = calendarEvents.filter((e:any) => {return  e._id !== event._id });
+                setCalendarEvents(newEvents);
+                onClose();
+                break;
+            default:
+                newEvents = [];
+                break;
+
+        }
+    } 
+
+    const onClose = () => { setOpen(false);  setOpenUpdateDelete(false); setOpenUpdateDialog(false); };
 
     useEffect(() => {
         getProperties().then((data) => {
@@ -89,9 +127,8 @@ const Calendar = () => {
                         tooltip: 'Details about Meeting 1',
                         editable: true,
                       }
-                    events.push(event)
+                    events.push({ ...event, ...res })
                 })
-                console.log("Reservations: ", events)
                 setCalendarEvents(events)
             } else {
                 updateSnackBarMessage('An unexpected error occurred. Please try again !');
@@ -100,7 +137,37 @@ const Calendar = () => {
             //     setCalendarEvents([])
             // };
         });
-    }, [selectedPropertyId])
+    }, [selectedPropertyId, calendarEvents])
+
+    const UpdateReservationFunc = () => {
+        setOpenUpdateDialog(true);
+    }
+
+    const deleteReservation = () => {
+        console.log("delete reservation clicked")
+        selectedEvent && removeReservation(selectedEvent._id).then((data) => {
+            if (data.error) {
+                updateSnackBarMessage(data.error.message);
+            } else if (data.success){
+                updateCalendarEvents(data.success?.reservation, "delete");
+            } else {
+                updateSnackBarMessage('An unexpected error occurred. Please try again !');
+            }
+        });
+    }
+
+    const ChooseComponentButtons = [
+        {
+            text: "update reservation",
+            func: UpdateReservationFunc,
+            clsxText: "update"
+        },
+        {
+            text: "delete reservation",
+            func: deleteReservation,
+            clsxText: "cancel"
+        },
+    ]
 
     return (
         <>
@@ -144,10 +211,16 @@ const Calendar = () => {
                     </Grid>
                 </Grid>
                 <Grid item style={{ width: "100%" }}>
-                    <CustomCalendar events={calendarEvents} />
+                    <CustomCalendar events={calendarEvents} onSelectEvent={onSelectEvent} />
                 </Grid>
                 <CustomDialog open={open} onClose={onClose}>
                     <AddReservation propertyId={selectedPropertyId}/>
+                </CustomDialog>
+                <CustomDialog open={openUpdateDialog} onClose={onClose}>
+                    <UpdateReservation reservation={selectedEvent} updateCalendarEvents={updateCalendarEvents}/>
+                </CustomDialog>
+                <CustomDialog open={openUpdateDelete} onClose={onClose}>
+                    <ChooseComponent buttons={ChooseComponentButtons} text={"What would you like to do?"}/>
                 </CustomDialog>
             </Grid>
         </Paper>
