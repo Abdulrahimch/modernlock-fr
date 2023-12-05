@@ -18,3 +18,23 @@ export const getReservations = async (propertyId: string): Promise<ReservationAp
         }))
 };
 
+export const removeReservation = async (reservationId: string): Promise<ReservationApiData> => {
+    return await axios.delete(`/api/v1/reservations/${reservationId}`)
+        .then((res) => res.data)
+        .catch(() => ({
+            error: { message: 'Unable to connect to server. Please try again' }
+        }))
+};
+
+export const updateReservation = async (reservationId: string, inputs: any): Promise<ReservationApiData> => {
+    return await axios.patch(`/api/v1/reservations/${reservationId}`, inputs)
+        .then((res) => res.data)
+        .catch(() => ({
+            error: { message: 'Unable to connect to server. Please try again' }
+        }))
+};
+
+
+
+
+
