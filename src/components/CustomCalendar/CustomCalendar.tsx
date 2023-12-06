@@ -29,10 +29,12 @@ interface EventInt {
 interface Props {
   events: EventInt[],
   onSelectEvent?: (event: EventInt) => void;
+  handleNavigate: (date: Date) => void;
 };
 
-const CustomCalendar = ({ events, onSelectEvent }: Props) => {
-  console.log("events is from calnedar components: ", events)
+
+const CustomCalendar = ({ events, onSelectEvent, handleNavigate }: Props) => {
+
   return (
       <>
         <Box>
@@ -42,6 +44,7 @@ const CustomCalendar = ({ events, onSelectEvent }: Props) => {
             startAccessor="start"
             endAccessor="end"
             onSelectEvent={onSelectEvent}
+            onNavigate={handleNavigate}
             style={{ height: 500 }}
             views={["month"]}
           />
