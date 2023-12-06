@@ -18,10 +18,35 @@ const reservation: Reservation = {
 }
 
 interface Props {
-    propertyId: string
+    propertyId: string;
+    calendarEvents: any[];
 }
 
-const AddReservation = ({ propertyId }: Props) => {
+function isDateBetween(targetDate: Date, startDate: Date, endDate: Date): boolean {
+    const targetYear = targetDate.getFullYear();
+    const targetMonth = targetDate.getMonth();
+    const targetDay = targetDate.getDate();
+  
+    const startYear = startDate.getFullYear();
+    const startMonth = startDate.getMonth();
+    const startDay = startDate.getDate();
+  
+    const endYear = endDate.getFullYear();
+    const endMonth = endDate.getMonth();
+    const endDay = endDate.getDate();
+  
+    // Check if targetDate falls between startDate and endDate (inclusive)
+    return (
+      targetYear >= startYear &&
+      targetYear <= endYear &&
+      targetMonth >= startMonth &&
+      targetMonth <= endMonth &&
+      targetDay >= startDay &&
+      targetDay <= endDay
+    );
+  }
+
+const AddReservation = ({ propertyId, calendarEvents }: Props) => {
     const { root, mainTitle } = useStyles();
     const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
     const history = useHistory();
@@ -33,6 +58,14 @@ const AddReservation = ({ propertyId }: Props) => {
         if (!propertyId) {
             updateSnackBarMessage("Please select a property")
             return;
+        }
+        for (var event of calendarEvents) {
+            console.log("event is: ", event, inputs)
+            if ( (isDateBetween(inputs.checkin, event.start, event.end)) || (isDateBetween(inputs.checkout, event.start, event.end))) {
+                console.log("why ? ", inputs, event)
+                updateSnackBarMessage('Dates are not available!!!');
+                return
+            }
         }
         postReservation(propertyId, inputs).then((data) => {
             if (data.error) {
