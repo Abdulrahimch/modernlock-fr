@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog/CustomDialog";
 import AddReservation from "./AddUpdateCalendar/AddReservation";
 import { Property } from "../../interface/Property";
-import { getReservations, removeReservation } from "../../helpers/APICalls/reservation";
+import { getReservations, getReservationsPerFilter, removeReservation } from "../../helpers/APICalls/reservation";
 import { Reservation } from "../../interface/Reservation";
 import ChooseComponent from "../../components/ChooseComponent/ChooseComponent";
 import UpdateReservation from "./AddUpdateCalendar/UpdateReservation";
@@ -45,8 +45,6 @@ const Calendar = () => {
     const [calendarEvents, setCalendarEvents] = useState<any []>([]);
     const [openUpdateDelete, setOpenUpdateDelete] = useState<boolean>(false);
     const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
-
-    
     
 
     const handleChange = (event: any) => {
@@ -93,6 +91,37 @@ const Calendar = () => {
 
     const onClose = () => { setOpen(false);  setOpenUpdateDelete(false); setOpenUpdateDialog(false); };
 
+    const handleNavigate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+
+        getReservationsPerFilter(selectedPropertyId, { month, year }).then((data) => {
+            if (data.error) {
+                updateSnackBarMessage(data.error.message);
+            } else if (data.success) {
+                let events: any[] = []
+                data.success?.reservations && data.success?.reservations.map((res: Reservation, idx: number) => {
+                    let e = new Date(res.checkout).setDate(new Date(res.checkout).getDate() -1)
+                    let event = {
+                        id: idx+1,
+                        title: res.name,
+                        start: new Date(res.checkin),
+                        end: new Date(e),
+                        tooltip: 'Details about Meeting 1',
+                        editable: true,
+                      }
+                    events.push({ ...event, ...res })
+                })
+                setCalendarEvents(events)
+            } else {
+                updateSnackBarMessage('An unexpected error occurred. Please try again !');
+            }
+            // return () => {
+            //     setCalendarEvents([])
+            // };
+        });
+    }
+
     useEffect(() => {
         getProperties().then((data) => {
             if (data.error) {
@@ -119,11 +148,13 @@ const Calendar = () => {
             } else if (data.success) {
                 let events: any[] = []
                 data.success?.reservations && data.success?.reservations.map((res: Reservation, idx: number) => {
+                    let e = new Date(res.checkout).setDate(new Date(res.checkout).getDate() -1)
+                    console.log("eeeeeeeee ", new Date(e))
                     let event = {
                         id: idx+1,
                         title: res.name,
                         start: new Date(res.checkin),
-                        end: new Date(res.checkout),
+                        end: new Date(e),
                         tooltip: 'Details about Meeting 1',
                         editable: true,
                       }
@@ -137,7 +168,7 @@ const Calendar = () => {
             //     setCalendarEvents([])
             // };
         });
-    }, [selectedPropertyId, calendarEvents])
+    }, [selectedPropertyId])
 
     const UpdateReservationFunc = () => {
         setOpenUpdateDialog(true);
@@ -211,10 +242,10 @@ const Calendar = () => {
                     </Grid>
                 </Grid>
                 <Grid item style={{ width: "100%" }}>
-                    <CustomCalendar events={calendarEvents} onSelectEvent={onSelectEvent} />
+                    <CustomCalendar events={calendarEvents} onSelectEvent={onSelectEvent} handleNavigate={handleNavigate} />
                 </Grid>
                 <CustomDialog open={open} onClose={onClose}>
-                    <AddReservation propertyId={selectedPropertyId}/>
+                    <AddReservation propertyId={selectedPropertyId} calendarEvents={calendarEvents} />
                 </CustomDialog>
                 <CustomDialog open={openUpdateDialog} onClose={onClose}>
                     <UpdateReservation reservation={selectedEvent} updateCalendarEvents={updateCalendarEvents}/>
