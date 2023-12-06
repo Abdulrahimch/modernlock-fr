@@ -35,6 +35,18 @@ export const updateReservation = async (reservationId: string, inputs: any): Pro
 };
 
 
+export const getReservationsPerFilter = async (propertyId: string, filter: {}): Promise<ReservationApiData> => {
+    return await axios.get(`/api/v1/reservations/filter`, { params: {
+        propertyId,
+        filter
+    } })
+        .then((res) => res.data)
+        .catch(() => ({
+            error: { message: 'Unable to connect to server. Please try again' }
+        }))
+};
+
+
 
 
 
