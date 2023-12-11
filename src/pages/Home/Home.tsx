@@ -12,6 +12,10 @@ import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './styles.css';
+import { useEffect, useState } from "react";
+import { useSnackBar } from "../../context/useSnackbarContext";
+import { getArrivals } from "../../helpers/APICalls/reservation";
+import { useAuth } from "../../context/useAuthContext";
 
 
 const Home = () => {
@@ -36,6 +40,10 @@ const Home = () => {
 
     const history = useHistory();
     const { root, pageTitle } = useStyles();
+    const { updateSnackBarMessage } = useSnackBar();
+    const [arrivals, setArrivals] = useState<any>([]);
+    const { userProperties } = useAuth();
+    console.log("userProperties is ", userProperties)
 
     const buttons: ButtonInterface[] = [
         {btnText: "today", onBtnClick: () => {history.push("/today")}}, 
@@ -54,7 +62,20 @@ const Home = () => {
         {status: "Currently hosting", name: "ahmed omran", from: "21 jan", to: "01 feb", roomNo: 16}, 
         {status: "Currently hosting", name: "ahmed omran", from: "21 jan", to: "01 feb", roomNo: 16},
         {status: "Currently hosting", name: "ahmed omran", from: "21 jan", to: "01 feb", roomNo: 16}
-    ]
+    ];
+
+    useEffect(() => {
+        getArrivals().then((data) => {
+            if (data.error) {
+                updateSnackBarMessage(data.error.message);
+            } else if (data.success){
+                setArrivals(data.success?.reservations)
+               
+            } else {
+                updateSnackBarMessage('An unexpected error occurred. Please try again !');
+            }
+        });
+    }, [])
 
     return (
         <>
@@ -85,28 +106,28 @@ const Home = () => {
                                     // modules={[Pagination]}
                                     className={"mySwiper"}
                                 >
-                                    {cards ? cards.map(({status, name, from, to, roomNo}) => (
+                                    {arrivals ? arrivals.map(({ name, checkin, checkout, propertyId}: any) => (
                                         <>
                                             <SwiperSlide>
                                                 <Grid item xs={12} sm={12}  style={{ width: "100%" }}>
                                                     <Card style={{ borderRadius: "25px" }}>
                                                         <CardContent>
                                                             <Typography gutterBottom style={{ fontWeight: 800, fontSize: 16, color: "red", marginBottom: "2em" }}>
-                                                                {status}
+                                                                Currently hosting
                                                             </Typography>
                                                             <Typography gutterBottom style={{ fontWeight: 800, fontSize: 16, marginBottom: "1em", textTransform: "capitalize" }}>
-                                                                {name} <br /> {`${from} -  ${to}`}
+                                                                {name} <br /> {`${checkin.toString().slice(0,10)} -  ${checkout.toString().slice(0,10)}`}
                                                             </Typography>
                                                             {/* <Typography style={{ fontWeight: 800, fontSize: 16 }}>
                                                                 {`${from} -  ${to}`} 
                                                             </Typography> */}
                                                             <Typography variant="body2" style={{ color: "secondary" }}>
-                                                                {`Room/Apart No: ${roomNo}`}
+                                                                {`Room/Apart No: ` } {userProperties ? userProperties.map(pro => { if (pro._id === propertyId) return pro.name }) : null}
                                                             </Typography>
                                                         </CardContent>
                                                         <CardActions>
-                                                            <Button size="small">Share</Button>
-                                                            <Button size="small">Learn More</Button>
+                                                            <Button size="small" style={{ color: "green" }}>lock</Button>
+                                                            <Button size="small" style={{ color: "red" }}>unlock</Button>
                                                         </CardActions>
                                                     </Card>
                                                 </Grid>
