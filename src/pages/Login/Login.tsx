@@ -5,10 +5,12 @@ import LoginForm from './LoginForm/LoginForm';
 import login from '../../helpers/APICalls/login';
 import { useAuth } from '../../context/useAuthContext';
 import { useSnackBar } from '../../context/useSnackbarContext';
+import { useEffect } from 'react';
+import { getProperties } from '../../helpers/APICalls/properties';
 
 function Login(): JSX.Element {
     const classes = useStyles();
-    const { updateLoginContext } = useAuth();
+    const { updateLoginContext, loggedInUser, updateUserProperties } = useAuth();
     const { updateSnackBarMessage } = useSnackBar();
     const email = "",
           password = "";

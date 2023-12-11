@@ -5,7 +5,7 @@ export interface Property {
     phone?: string
 };
 
-interface PropertyApiDataSuccess {
+export interface PropertyApiDataSuccess {
     properties?: Property[];
     property?: Property
 }
